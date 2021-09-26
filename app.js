@@ -3,11 +3,10 @@ import y from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import {
-  getNotes,
   addNote,
-  loadNotes,
   removeNote,
   getNotesList,
+  readNote,
 } from './src/notes.js';
 
 const yargs = y(hideBin(process.argv));
@@ -28,7 +27,7 @@ yargs
         type: 'string',
       },
     },
-    handler: ({ title, body }) => {
+    handler({ title, body }) {
       addNote(title, body);
     },
   })
@@ -42,26 +41,30 @@ yargs
         type: 'string',
       },
     },
-    handler: ({ title }) => {
+    handler({ title }) {
       removeNote(title);
     },
   })
   .command({
     command: 'list',
     describe: 'Lists all Notes',
-    handler: () => {
-      const listHeader = chalk.bold.green('Your Notes:\n\n');
-      console.log(`${listHeader}${getNotesList()}`);
+    handler() {
+      getNotesList();
     },
   })
   .command({
     command: 'read',
     describe: 'Read a Note',
-    handler: () => {
-      console.log('Reading a Note');
+    builder: {
+      title: {
+        describe: 'Note title',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler({ title }) {
+      readNote(title);
     },
   });
 
 yargs.parse();
-
-// console.log(loadNotes());

@@ -68,7 +68,23 @@ export const getNotesList = () => {
     .map(({ title }) => chalk.bold.yellowBright(title))
     .join(NOTES_SEPARATOR);
 
-  return formattedNotesList;
+  return console.log(
+    `${chalk.bold.green('Your Notes:')}\n\n${formattedNotesList}`
+  );
 };
 
-export const getNotes = () => 'Your notes ...';
+export const readNote = (title) => {
+  const notes = loadNotes();
+  const noteToRead = notes.find(({ title: noteTitle }) => noteTitle === title);
+
+  if (!noteToRead)
+    return console.warn(
+      chalk.bgRed.black(`Note with title '${title}' doesn't exist`)
+    );
+
+  return console.log(
+    `${chalk.bold.yellow('Title')}: ${chalk.blue(
+      noteToRead.title
+    )}\n${chalk.bold.yellow('Body')}: ${chalk.blue(noteToRead.body)}`
+  );
+};
